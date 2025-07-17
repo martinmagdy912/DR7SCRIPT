@@ -1,96 +1,129 @@
+-- واجهة GUI كاملة فيها زر Toggle وTabs وسكربتات، وتبدأ مفتوحة
+
 local player = game.Players.LocalPlayer
-local gui = Instance.new("ScreenGui", player:WaitForChild("PlayerGui"))
-gui.ResetOnSpawn = false
+local mouse = player:GetMouse()
 
--- الزر الرئيسي الدائري
-local openBtn = Instance.new("TextButton")
-openBtn.Name = "DR7Button"
-openBtn.Parent = gui
-openBtn.Text = "DR7"
-openBtn.TextSize = 18
-openBtn.Font = Enum.Font.GothamBlack
-openBtn.Size = UDim2.new(0, 50, 0, 50)
-openBtn.Position = UDim2.new(0, 10, 0.5, -25)
-openBtn.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
-openBtn.TextColor3 = Color3.new(1,1,1)
-openBtn.BorderSizePixel = 0
-openBtn.ZIndex = 10
-openBtn.ClipsDescendants = true
-openBtn.AutoButtonColor = true
-openBtn.BackgroundTransparency = 0
-openBtn.AnchorPoint = Vector2.new(0, 0.5)
-openBtn.TextWrapped = true
-openBtn.SizeConstraint = Enum.SizeConstraint.RelativeYY
-openBtn.Shape = Enum.ButtonStyle.RobloxRoundButton
+local screenGui = Instance.new("ScreenGui", player:WaitForChild("PlayerGui"))
+screenGui.ResetOnSpawn = false
+screenGui.Name = "DR7_GUI"
 
--- الفريم بتاع القايمة
-local mainFrame = Instance.new("Frame")
-mainFrame.Parent = gui
-mainFrame.Size = UDim2.new(0, 300, 0, 300)
-mainFrame.Position = UDim2.new(0, 70, 0.5, -150)
+-- زرار التفعيل
+local toggleBtn = Instance.new("TextButton", screenGui)
+toggleBtn.Size = UDim2.new(0, 70, 0, 70)
+toggleBtn.Position = UDim2.new(0, 10, 0.5, -35)
+toggleBtn.Text = "DR7"
+toggleBtn.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
+toggleBtn.TextColor3 = Color3.new(1, 1, 1)
+toggleBtn.Font = Enum.Font.GothamBold
+toggleBtn.TextSize = 24
+toggleBtn.BackgroundTransparency = 0.2
+Instance.new("UICorner", toggleBtn).CornerRadius = UDim.new(1, 0)
+
+-- الواجهة الرئيسية
+local mainFrame = Instance.new("Frame", screenGui)
+mainFrame.Size = UDim2.new(0, 520, 0, 320)
+mainFrame.Position = UDim2.new(0.5, -260, 0.5, -160)
 mainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-mainFrame.Visible = false
+mainFrame.BorderSizePixel = 0
+mainFrame.Visible = true -- تبدأ مفتوحة
+Instance.new("UICorner", mainFrame).CornerRadius = UDim.new(0, 16)
 
--- دالة التبديل
-openBtn.MouseButton1Click:Connect(function()
-	mainFrame.Visible = not mainFrame.Visible
-end)
+-- منطقة التابات
+local tabFrame = Instance.new("Frame", mainFrame)
+tabFrame.Size = UDim2.new(0, 130, 1, 0)
+tabFrame.Position = UDim2.new(0, 0, 0, 0)
+tabFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+Instance.new("UICorner", tabFrame).CornerRadius = UDim.new(0, 8)
 
--- Tabs setup
-local tabs = {"القتال", "السرقة", "بروكهافن", "أدوات التنقل"}
-local tabScripts = {
-	["القتال"] = {
-		{"ESP", 'loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-ESP-5762"))()'},
-		{"Aimbot", 'loadstring(game:HttpGet("https://rawscripts.net/raw/Aimbot-For-Roblox-4856"))()'},
-	},
-	["السرقة"] = {
-		{"Infinite Yield", 'loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()'},
-	},
-	["بروكهافن"] = {
-		{"Script 1", 'loadstring(game:HttpGet("https://raw.githubusercontent.com/martinmagdy912/Brookhaven/main/Script"))()'},
-	},
-	["أدوات التنقل"] = {
-		{"Fly", 'loadstring(game:HttpGet("https://rawscripts.net/raw/Fly-GUI-3810"))()'},
-		{"Fling", 'loadstring(game:HttpGet("https://rawscripts.net/raw/Fling-GUI-7129"))()'},
-		{"Wallhop", 'loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-wallhop-42706"))()'},
-	}
+-- منطقة المحتوى
+local contentFrame = Instance.new("Frame", mainFrame)
+contentFrame.Size = UDim2.new(1, -140, 1, -20)
+contentFrame.Position = UDim2.new(0, 140, 0, 10)
+contentFrame.BackgroundTransparency = 1
+
+-- دالة لتنظيف المحتوى
+local function clearContent()
+    for _, v in pairs(contentFrame:GetChildren()) do
+        if v:IsA("TextButton") then
+            v:Destroy()
+        end
+    end
+end
+
+-- التابات والمحتوى
+local tabs = {
+    {
+        name = "القتال",
+        scripts = {
+            {"ESP", "https://rawscripts.net/raw/Universal-Script-ESP-10638"},
+            {"Aimbot", "https://rawscripts.net/raw/Aimbot-Script-aimbot-11406"},
+        }
+    },
+    {
+        name = "السرقة",
+        scripts = {
+            {"Auto Farm", "https://raw.githubusercontent.com/martinmagdy912/RobloxScripts/main/robbery.lua"},
+        }
+    },
+    {
+        name = "بروكهافن",
+        scripts = {
+            {"تحكم في البيوت", "https://raw.githubusercontent.com/martinmagdy912/RobloxScripts/main/houses.lua"},
+        }
+    },
+    {
+        name = "أدوات تنقل",
+        scripts = {
+            {"طيران", "https://raw.githubusercontent.com/martinmagdy912/RobloxScripts/main/fly.lua"},
+            {"فلينق", "https://raw.githubusercontent.com/martinmagdy912/RobloxScripts/main/fling.lua"},
+            {"WallHop", "https://rawscripts.net/raw/Universal-Script-wallhop-42706"},
+            {"سرعة", "https://raw.githubusercontent.com/martinmagdy912/RobloxScripts/main/speed.lua"},
+            {"نط", "https://raw.githubusercontent.com/martinmagdy912/RobloxScripts/main/jump.lua"},
+        }
+    }
 }
 
-local UIListLayout = Instance.new("UIListLayout")
-UIListLayout.Parent = mainFrame
-UIListLayout.FillDirection = Enum.FillDirection.Vertical
-UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
-UIListLayout.Padding = UDim.new(0, 5)
+-- دالة لتحميل تاب
+local function loadTab(tab)
+    clearContent()
+    for i, scriptInfo in ipairs(tab.scripts) do
+        local btn = Instance.new("TextButton", contentFrame)
+        btn.Size = UDim2.new(1, -20, 0, 40)
+        btn.Position = UDim2.new(0, 10, 0, (i - 1) * 45)
+        btn.Text = scriptInfo[1]
+        btn.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+        btn.TextColor3 = Color3.new(1, 1, 1)
+        btn.Font = Enum.Font.GothamBold
+        btn.TextSize = 18
+        Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 6)
 
-for _, tabName in ipairs(tabs) do
-	local tabBtn = Instance.new("TextButton")
-	tabBtn.Parent = mainFrame
-	tabBtn.Size = UDim2.new(1, -10, 0, 30)
-	tabBtn.Position = UDim2.new(0, 5, 0, 0)
-	tabBtn.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-	tabBtn.Text = tabName
-	tabBtn.TextColor3 = Color3.new(1,1,1)
-	tabBtn.Font = Enum.Font.Gotham
-	tabBtn.TextSize = 16
-
-	tabBtn.MouseButton1Click:Connect(function()
-		local options = tabScripts[tabName]
-		for _, v in pairs(options) do
-			local scriptName = v[1]
-			local scriptCode = v[2]
-
-			local sbtn = Instance.new("TextButton")
-			sbtn.Parent = mainFrame
-			sbtn.Size = UDim2.new(1, -20, 0, 25)
-			sbtn.Position = UDim2.new(0, 10, 0, 0)
-			sbtn.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
-			sbtn.Text = " > " .. scriptName
-			sbtn.TextColor3 = Color3.new(1,1,1)
-			sbtn.Font = Enum.Font.Gotham
-			sbtn.TextSize = 14
-			sbtn.MouseButton1Click:Connect(function()
-				loadstring(scriptCode)()
-			end)
-		end
-	end)
+        btn.MouseButton1Click:Connect(function()
+            loadstring(game:HttpGet(scriptInfo[2]))()
+        end)
+    end
 end
+
+-- إنشاء أزرار التابات
+for i, tab in ipairs(tabs) do
+    local tabBtn = Instance.new("TextButton", tabFrame)
+    tabBtn.Size = UDim2.new(1, -20, 0, 40)
+    tabBtn.Position = UDim2.new(0, 10, 0, (i - 1) * 45 + 10)
+    tabBtn.Text = tab.name
+    tabBtn.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+    tabBtn.TextColor3 = Color3.new(1, 1, 1)
+    tabBtn.Font = Enum.Font.Gotham
+    tabBtn.TextSize = 18
+    Instance.new("UICorner", tabBtn).CornerRadius = UDim.new(0, 6)
+
+    tabBtn.MouseButton1Click:Connect(function()
+        loadTab(tab)
+    end)
+end
+
+-- أول تاب يظهر تلقائي
+loadTab(tabs[1])
+
+-- زر DR7 يفتح/يقفل الواجهة
+toggleBtn.MouseButton1Click:Connect(function()
+    mainFrame.Visible = not mainFrame.Visible
+end)
