@@ -1,129 +1,137 @@
--- واجهة GUI كاملة فيها زر Toggle وTabs وسكربتات، وتبدأ مفتوحة
+--[[
+   سكربت واجهة DR7
+   تصميم مخصص بالمربعات والتابات
+   إعداد: MARTIN
+]]--
 
-local player = game.Players.LocalPlayer
-local mouse = player:GetMouse()
+-- تحميل Rayfield UI
+local Rayfield = loadstring(game:HttpGet("https://raw.githubusercontent.com/shlexware/Rayfield/main/source"))()
 
-local screenGui = Instance.new("ScreenGui", player:WaitForChild("PlayerGui"))
-screenGui.ResetOnSpawn = false
-screenGui.Name = "DR7_GUI"
+-- إنشاء نافذة
+local Window = Rayfield:CreateWindow({
+   Name = "DR7",
+   LoadingTitle = "DR7 Interface",
+   LoadingSubtitle = "by MARTIN",
+   ConfigurationSaving = {
+      Enabled = false
+   },
+   Discord = {
+      Enabled = false
+   },
+   KeySystem = false
+})
 
--- زرار التفعيل
-local toggleBtn = Instance.new("TextButton", screenGui)
-toggleBtn.Size = UDim2.new(0, 70, 0, 70)
-toggleBtn.Position = UDim2.new(0, 10, 0.5, -35)
-toggleBtn.Text = "DR7"
-toggleBtn.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
-toggleBtn.TextColor3 = Color3.new(1, 1, 1)
-toggleBtn.Font = Enum.Font.GothamBold
-toggleBtn.TextSize = 24
-toggleBtn.BackgroundTransparency = 0.2
-Instance.new("UICorner", toggleBtn).CornerRadius = UDim.new(1, 0)
+--[[
+    تبويب القتال
+]]--
+local combatTab = Window:CreateTab("🗡️ القتال", 4483362458)
 
--- الواجهة الرئيسية
-local mainFrame = Instance.new("Frame", screenGui)
-mainFrame.Size = UDim2.new(0, 520, 0, 320)
-mainFrame.Position = UDim2.new(0.5, -260, 0.5, -160)
-mainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-mainFrame.BorderSizePixel = 0
-mainFrame.Visible = true -- تبدأ مفتوحة
-Instance.new("UICorner", mainFrame).CornerRadius = UDim.new(0, 16)
+combatTab:CreateButton({
+   Name = "murder vs sheriff duel",
+   Callback = function()
+      loadstring(game:HttpGet("https://raw.githubusercontent.com/tbao143/thaibao/main/TbaoHubMurdervssheriff"))()
+   end
+})
 
--- منطقة التابات
-local tabFrame = Instance.new("Frame", mainFrame)
-tabFrame.Size = UDim2.new(0, 130, 1, 0)
-tabFrame.Position = UDim2.new(0, 0, 0, 0)
-tabFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-Instance.new("UICorner", tabFrame).CornerRadius = UDim.new(0, 8)
+combatTab:CreateButton({
+   Name = "mm2",
+   Callback = function()
+      loadstring(game:HttpGet("https://raw.githubusercontent.com/Au0yX/Community/main/XhubMM2"))()
+   end
+})
 
--- منطقة المحتوى
-local contentFrame = Instance.new("Frame", mainFrame)
-contentFrame.Size = UDim2.new(1, -140, 1, -20)
-contentFrame.Position = UDim2.new(0, 140, 0, 10)
-contentFrame.BackgroundTransparency = 1
+--[[
+    تبويب بروكهافن
+]]--
+local brookTab = Window:CreateTab("🏡 بروكهافن", 4483362458)
 
--- دالة لتنظيف المحتوى
-local function clearContent()
-    for _, v in pairs(contentFrame:GetChildren()) do
-        if v:IsA("TextButton") then
-            v:Destroy()
-        end
-    end
-end
+brookTab:CreateButton({
+   Name = "مارتن",
+   Callback = function()
+      loadstring(game:HttpGet("https://rawscripts.net/raw/Brookhaven-RP-MARTIN-IRAQ-31476"))()
+   end
+})
 
--- التابات والمحتوى
-local tabs = {
-    {
-        name = "القتال",
-        scripts = {
-            {"ESP", "https://rawscripts.net/raw/Universal-Script-ESP-10638"},
-            {"Aimbot", "https://rawscripts.net/raw/Aimbot-Script-aimbot-11406"},
-        }
-    },
-    {
-        name = "السرقة",
-        scripts = {
-            {"Auto Farm", "https://raw.githubusercontent.com/martinmagdy912/RobloxScripts/main/robbery.lua"},
-        }
-    },
-    {
-        name = "بروكهافن",
-        scripts = {
-            {"تحكم في البيوت", "https://raw.githubusercontent.com/martinmagdy912/RobloxScripts/main/houses.lua"},
-        }
-    },
-    {
-        name = "أدوات تنقل",
-        scripts = {
-            {"طيران", "https://raw.githubusercontent.com/martinmagdy912/RobloxScripts/main/fly.lua"},
-            {"فلينق", "https://raw.githubusercontent.com/martinmagdy912/RobloxScripts/main/fling.lua"},
-            {"WallHop", "https://rawscripts.net/raw/Universal-Script-wallhop-42706"},
-            {"سرعة", "https://raw.githubusercontent.com/martinmagdy912/RobloxScripts/main/speed.lua"},
-            {"نط", "https://raw.githubusercontent.com/martinmagdy912/RobloxScripts/main/jump.lua"},
-        }
-    }
-}
+brookTab:CreateButton({
+   Name = "الفا",
+   Callback = function()
+      loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-ALFA-IRAQ-34036"))()
+   end
+})
 
--- دالة لتحميل تاب
-local function loadTab(tab)
-    clearContent()
-    for i, scriptInfo in ipairs(tab.scripts) do
-        local btn = Instance.new("TextButton", contentFrame)
-        btn.Size = UDim2.new(1, -20, 0, 40)
-        btn.Position = UDim2.new(0, 10, 0, (i - 1) * 45)
-        btn.Text = scriptInfo[1]
-        btn.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-        btn.TextColor3 = Color3.new(1, 1, 1)
-        btn.Font = Enum.Font.GothamBold
-        btn.TextSize = 18
-        Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 6)
+brookTab:CreateButton({
+   Name = "خليفه",
+   Callback = function()
+      loadstring(game:HttpGet("https://rawscripts.net/raw/Brookhaven-RP-MS13-IRAQ-44980"))()
+   end
+})
 
-        btn.MouseButton1Click:Connect(function()
-            loadstring(game:HttpGet(scriptInfo[2]))()
-        end)
-    end
-end
+--[[
+    تبويب ماب السرقه
+]]--
+local robberyTab = Window:CreateTab("💰 ماب السرقه", 4483362458)
 
--- إنشاء أزرار التابات
-for i, tab in ipairs(tabs) do
-    local tabBtn = Instance.new("TextButton", tabFrame)
-    tabBtn.Size = UDim2.new(1, -20, 0, 40)
-    tabBtn.Position = UDim2.new(0, 10, 0, (i - 1) * 45 + 10)
-    tabBtn.Text = tab.name
-    tabBtn.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-    tabBtn.TextColor3 = Color3.new(1, 1, 1)
-    tabBtn.Font = Enum.Font.Gotham
-    tabBtn.TextSize = 18
-    Instance.new("UICorner", tabBtn).CornerRadius = UDim.new(0, 6)
+robberyTab:CreateButton({
+   Name = "ماب السرقه",
+   Callback = function()
+      loadstring(game:HttpGet("https://raw.githubusercontent.com/DoliScriptz/loader/refs/heads/main/main.lua",true))()
+   end
+})
 
-    tabBtn.MouseButton1Click:Connect(function()
-        loadTab(tab)
-    end)
-end
+robberyTab:CreateButton({
+   Name = "ماب السرقه 2",
+   Callback = function()
+      loadstring(game:HttpGet("https://raw.githubusercontent.com/tienkhanh1/spicy/main/Chilli.lua"))()
+   end
+})
 
--- أول تاب يظهر تلقائي
-loadTab(tabs[1])
+--[[
+    تبويب أخرى
+]]--
+local otherTab = Window:CreateTab("🎮 أخرى", 4483362458)
 
--- زر DR7 يفتح/يقفل الواجهة
-toggleBtn.MouseButton1Click:Connect(function()
-    mainFrame.Visible = not mainFrame.Visible
+otherTab:CreateButton({
+   Name = "طيران",
+   Callback = function()
+      loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-FE-FLY-MOBILE-SCRIPT-23875"))()
+   end
+})
+
+otherTab:CreateButton({
+   Name = "فلينق",
+   Callback = function()
+      loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Touch-fling-41998"))()
+   end
+})
+
+otherTab:CreateButton({
+   Name = "وول هوب",
+   Callback = function()
+      loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-wallhop-42706"))()
+   end
+})
+
+otherTab:CreateButton({
+   Name = "رقصات مجانية",
+   Callback = function()
+      loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Fe-emotes-15813"))()
+   end
+})
+
+--[[
+    زر فتح/إغلاق الواجهة
+]]--
+local ToggleUI = Instance.new("TextButton")
+ToggleUI.Text = "DR7"
+ToggleUI.Size = UDim2.new(0, 60, 0, 60)
+ToggleUI.Position = UDim2.new(0, 20, 0.5, -30)
+ToggleUI.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+ToggleUI.TextColor3 = Color3.fromRGB(255, 255, 255)
+ToggleUI.TextScaled = true
+ToggleUI.Font = Enum.Font.GothamBold
+ToggleUI.Parent = game.CoreGui
+ToggleUI.ZIndex = 9999
+
+ToggleUI.MouseButton1Click:Connect(function()
+   Window:Toggle()
 end)
